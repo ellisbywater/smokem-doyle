@@ -7,7 +7,9 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed = 5f,
                  gravityModifier = 1,
                  jumpPower = 3,
-                 runSpeed = 2;
+                 runSpeed = 12;
+
+    private bool sprinting = false;
     
     public CharacterController characterController;
     public Transform cameraTransform;
@@ -21,6 +23,10 @@ public class PlayerController : MonoBehaviour
     private bool canJump, canDoubleJump;
     public Transform groundCheckPoint;
     public LayerMask whatIsGround;
+    
+    
+    // Animations
+    public Animator anim;
     
     
     // Start is called before the first frame update
@@ -46,10 +52,12 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftShift))
         {
+            
             moveInput = moveInput * runSpeed;
         }
         else
         {
+            sprinting = false;
             moveInput *= moveSpeed;
         }
 
@@ -93,5 +101,10 @@ public class PlayerController : MonoBehaviour
         }
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + mouseInput.x,transform.rotation.eulerAngles.z );
         cameraTransform.rotation = Quaternion.Euler(cameraTransform.rotation.eulerAngles + new Vector3(-mouseInput.y, 0f, 0f));
+        
+        // Set animations
+        anim.SetFloat("moveSpeed", moveInput.magnitude);
+        anim.SetBool("onGround", canJump);
+        
     }
 }
