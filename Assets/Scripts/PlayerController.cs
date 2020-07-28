@@ -23,6 +23,9 @@ public class PlayerController : MonoBehaviour
     private bool canJump, canDoubleJump;
     public Transform groundCheckPoint;
     public LayerMask whatIsGround;
+
+    public GameObject bullet;
+    public Transform bulletOrigin;
     
     
     // Animations
@@ -101,6 +104,25 @@ public class PlayerController : MonoBehaviour
         }
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + mouseInput.x,transform.rotation.eulerAngles.z );
         cameraTransform.rotation = Quaternion.Euler(cameraTransform.rotation.eulerAngles + new Vector3(-mouseInput.y, 0f, 0f));
+        
+        // Shooting
+        if (Input.GetMouseButtonDown(0))
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, 50f))
+            {
+                if (Vector3.Distance(cameraTransform.position, hit.point) > 2f)
+                {
+                    bulletOrigin.LookAt(hit.point);
+                }
+                
+            }
+            else
+            {
+                bulletOrigin.LookAt(cameraTransform.position + (cameraTransform.forward * 30f));
+            }
+            Instantiate(bullet, bulletOrigin.position, bulletOrigin.rotation);
+        }
         
         // Set animations
         anim.SetFloat("moveSpeed", moveInput.magnitude);
