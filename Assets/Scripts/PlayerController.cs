@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController instance;
     public float moveSpeed = 5f,
                  gravityModifier = 1,
                  jumpPower = 3,
@@ -30,8 +32,13 @@ public class PlayerController : MonoBehaviour
     
     // Animations
     public Animator anim;
-    
-    
+
+    public void Awake()
+    {
+        instance = this;
+    }
+
+
     // Start is called before the first frame update
     void Start()
     {
