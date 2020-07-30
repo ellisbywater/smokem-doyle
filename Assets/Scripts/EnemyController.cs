@@ -101,41 +101,45 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                _shotTimeCounter -= Time.deltaTime;
+                if (PlayerController.instance.gameObject.activeInHierarchy)
+                {
+                    _shotTimeCounter -= Time.deltaTime;
                
                 
-                if (_shotTimeCounter > 0)
-                {
-                    _fireCount -= Time.deltaTime;
-            
-                    if (_fireCount <= 0)
+                    if (_shotTimeCounter > 0)
                     {
-                        _fireCount = fireRate;
+                        _fireCount -= Time.deltaTime;
+            
+                        if (_fireCount <= 0)
+                        {
+                            _fireCount = fireRate;
                         
-                        firePoint.LookAt(PlayerController.instance.transform.position + new Vector3(0f, bullseye, 0f));
-                        // check the angle to the player
-                        Vector3 targetDirection = PlayerController.instance.transform.position - transform.position;
-                        float angle = Vector3.SignedAngle(targetDirection, transform.forward, Vector3.up);
+                            firePoint.LookAt(PlayerController.instance.transform.position + new Vector3(0f, bullseye, 0f));
+                            // check the angle to the player
+                            Vector3 targetDirection = PlayerController.instance.transform.position - transform.position;
+                            float angle = Vector3.SignedAngle(targetDirection, transform.forward, Vector3.up);
 
-                        if (Mathf.Abs(angle) < shotAngle)
-                        {
-                            Instantiate(bullet, firePoint.position, firePoint.rotation);
-                            animation.SetTrigger("fireShot");
-                        }
-                        else
-                        {
-                            _shotTimeCounter = shotTime;
-                        }
+                            if (Mathf.Abs(angle) < shotAngle)
+                            {
+                                Instantiate(bullet, firePoint.position, firePoint.rotation);
+                                animation.SetTrigger("fireShot");
+                            }
+                            else
+                            {
+                                _shotTimeCounter = shotTime;
+                            }
                         
                         
+                        }
+
+                        Agent.destination = transform.position;
+                    } else
+                    {
+                        _shotGapCounter = shotGap;
                     }
-
-                    Agent.destination = transform.position;
-                } else
-                {
-                    _shotGapCounter = shotGap;
                 }
-                animation.SetBool("moving", false);
+                animation.SetBool("moving", false);    
+                
             }
         }
         

@@ -36,7 +36,19 @@ public class PlayerHealthController : MonoBehaviour
         if (currentHealth <= 0)
         {
             gameObject.SetActive(false);
+            currentHealth = 0;
+            GameManager.instance.PlayerDied();
         }
+        UIController.instance.healthSlider.value = currentHealth;
+        UIController.instance.healthText.text = " " + currentHealth + " / " + maxHealth + " ";
+    }
+
+    public void HealPlayer(int healthAmount)
+    {
+        currentHealth += healthAmount;
+        if (currentHealth > maxHealth)
+            currentHealth = maxHealth;
+        
         UIController.instance.healthSlider.value = currentHealth;
         UIController.instance.healthText.text = " " + currentHealth + " / " + maxHealth + " ";
     }
