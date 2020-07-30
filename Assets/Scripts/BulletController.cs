@@ -45,12 +45,12 @@ public class BulletController : MonoBehaviour
         if (other.gameObject.CompareTag("Headshot") && playerBullet)
         {
             other.transform.parent.GetComponent<EnemyHealthController>().DamageEnemy(damage * headshotMultiplier);
-            Debug.Log("Headshot!! damage: " + (damage * headshotMultiplier));
         }
         
         if (other.gameObject.CompareTag("Player") && enemyBullet)
         {
-            Debug.Log("Hit Player at " + transform.position);
+           //Debug.Log("Hit Player at " + transform.position);
+           PlayerHealthController.instance.DamagePlayer(damage);
         }
         Destroy(gameObject);
         Instantiate(impactEffect, transform.position + (transform.forward * (-bulletSpeed * Time.deltaTime)), transform.rotation);
