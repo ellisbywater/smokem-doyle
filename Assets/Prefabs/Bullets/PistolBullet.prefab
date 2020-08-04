@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4519091518900744348}
   - component: {fileID: 7113997140940343742}
   m_Layer: 9
-  m_Name: PlayerBullet
+  m_Name: PistolBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4dc1ace30c283d445a76d0e63b1d86ca, type: 2}
+  - {fileID: 2100000, guid: 8f0bb34f6536662458c853ac59fc57c9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -110,9 +110,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2e489f355021d4d9458388e5be8f85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 28
+  bulletSpeed: 32
   lifetime: 3
-  damage: 1
+  damage: 4
+  headshotMultiplier: 2
   enemyBullet: 0
   playerBullet: 1
   rigidBody: {fileID: 4519091518900744348}
@@ -153,7 +154,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4dc1ace30c283d445a76d0e63b1d86ca, type: 2}
+  - {fileID: 2100000, guid: 8f0bb34f6536662458c853ac59fc57c9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

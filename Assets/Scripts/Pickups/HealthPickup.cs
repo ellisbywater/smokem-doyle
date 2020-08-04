@@ -11,7 +11,7 @@ public class HealthPickup : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            PlayerController.instance.HealPlayer(healAmount);
+            PlayerHealthController.instance.HealPlayer(healAmount);
             Destroy(gameObject);
         }
     }

@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
@@ -26,9 +30,14 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheckPoint;
     public LayerMask whatIsGround;
 
+    public List<Gun> allGuns = new List<Gun>();
+    public int currentGun;
+    public Gun activeGun;
     public GameObject bullet;
     public Transform bulletOrigin;
-    
+
+    public Transform gunHolder;
+    public float adsSpeed = 2f;
     
     // Animations
     public Animator anim;
@@ -42,6 +51,8 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        currentGun--;
+        SwitchGun();
         
     }
 
@@ -112,8 +123,9 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + mouseInput.x,transform.rotation.eulerAngles.z );
         cameraTransform.rotation = Quaternion.Euler(cameraTransform.rotation.eulerAngles + new Vector3(-mouseInput.y, 0f, 0f));
         
-        // Shooting
-        if (Input.GetMouseButtonDown(0))
+        // Handles Shooting
+        //Single shot
+        if (Input.GetMouseButtonDown(0) && activeGun.fireCounter <= 0)
         {
             RaycastHit hit;
             if (Physics.Raycast(cameraTransform.position, cameraTransform.forward, out hit, 50f))
@@ -128,12 +140,65 @@ public class PlayerController : MonoBehaviour
             {
                 bulletOrigin.LookAt(cameraTransform.position + (cameraTransform.forward * 30f));
             }
-            Instantiate(bullet, bulletOrigin.position, bulletOrigin.rotation);
+            FireShot();
+        }
+        
+        // automatic firing
+        if (Input.GetMouseButton(0) && activeGun.automaticWeapon)
+        {
+            if (activeGun.fireCounter <= 0)
+            {
+                FireShot();
+            }
+            
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            SwitchGun();
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            CameraController.instance.ZoomIn(activeGun.zoomAmount);
+        }
+        if (Input.GetMouseButtonUp(1))
+        {
+            CameraController.instance.ZoomOut();
+            
         }
         
         // Set animations
         anim.SetFloat("moveSpeed", moveInput.magnitude);
         anim.SetBool("onGround", canJump);
         
+    }
+
+    public void FireShot()
+    {
+        if (activeGun.currentAmmo > 0)
+        {
+            activeGun.currentAmmo--;
+            Instantiate(activeGun.bullet, bulletOrigin.position, bulletOrigin.rotation);
+            activeGun.fireCounter = activeGun.fireRate;
+        }
+    }
+
+    public void SwitchGun()
+    {
+        if(activeGun)
+            activeGun.gameObject.SetActive(false);
+        currentGun++;
+        Debug.Log("Current Gun Index: " + currentGun);
+        if (currentGun >= allGuns.Count)
+        {
+            currentGun = 0;
+        }
+        activeGun = allGuns[currentGun];
+        activeGun.gameObject.SetActive(true);
+        
+        Debug.Log("Active Gun: " + activeGun);
+
+        bulletOrigin.position = activeGun.bulletOrigin.position;
     }
 }

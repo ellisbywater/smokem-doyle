@@ -2,62 +2,69 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Serialization;
 
 public class EnemyController : MonoBehaviour
 {
-    [Header("Behavior Settings")]
-    private bool chasing;
-    public float distanceToChase = 10f, distanceToLose = 13f, distanceToStop = 2f;
-
-    private Vector3 targetPoint, startPoint;
-
-    public NavMeshAgent Agent;
-
-    public float keepChasingTime;
-    private float chaseCounter;
     
-    [Header("Bullet/Shooting Settings")]
+    private bool _chasing;
+    private Vector3 _targetPoint, _startPoint;
+    private float _chaseCounter;
+
+    [Header("Behavior Settings")] 
+    public float distanceToChase = 10f;
+    public float distanceToLose = 13f;
+    public float distanceToStop = 2f;
+    [FormerlySerializedAs("Agent")] public NavMeshAgent agent;
+    public float keepChasingTime;
+    
+    [Header("Weapon Settings")]
     public GameObject bullet;
     public Transform firePoint;
     public float bullseye = 1.2f;
+    public int bulletDamage = 1;
+    public int headshotDamageMultiplier = 2;
     
     public float shotAngle = 30;
     public float fireRate, shotGap, shotTime = 1f;
     private float _fireCount, _shotGapCounter, _shotTimeCounter;
 
-    [Header("Animation Settings")] public Animator animation;
+    [Header("Animation Settings")] public new Animator animation;
     
     // Start is called before the first frame update
     void Start()
     {
-        startPoint = transform.position;
+        _startPoint = transform.position;
         _shotTimeCounter = shotTime;
+        bullet.GetComponent<BulletController>().damage = bulletDamage;
+        bullet.GetComponent<BulletController>().headshotMultiplier = headshotDamageMultiplier;
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        targetPoint = PlayerController.instance.transform.position;
-        targetPoint.y = transform.position.y;
-        if (!chasing)
+        _targetPoint = PlayerController.instance.transform.position;
+        _targetPoint.y = transform.position.y;
+        if (!_chasing)
         {
-            if (Vector3.Distance(transform.position, targetPoint) < distanceToChase)
+            if (Vector3.Distance(transform.position, _targetPoint) < distanceToChase)
             {
-                chasing = true;
+                _chasing = true;
                 _shotTimeCounter = shotTime;
                 _shotGapCounter = shotGap;
             }
 
-            if (chaseCounter > 0)
+            if (_chaseCounter > 0)
             {
-                chaseCounter -= Time.deltaTime;
-                if (chaseCounter <= 0)
+                _chaseCounter -= Time.deltaTime;
+                if (_chaseCounter <= 0)
                 {
-                    Agent.destination = startPoint;
+                    agent.destination = _startPoint;
                 }
             }
 
-            if (Agent.remainingDistance < 0.25f)
+            if (agent.remainingDistance < 0.25f)
             {
                 animation.SetBool("moving", false);
             }
@@ -71,19 +78,19 @@ public class EnemyController : MonoBehaviour
         {
             /*transform.LookAt(targetPoint);
             rigidBody.velocity = transform.forward * moveSpeed;*/
-            if (Vector3.Distance(transform.position, targetPoint) > distanceToStop)
+            if (Vector3.Distance(transform.position, _targetPoint) > distanceToStop)
             {
-                Agent.destination = targetPoint;  
+                agent.destination = _targetPoint;  
             }
             else
             {
-                Agent.destination = transform.position;
+                agent.destination = transform.position;
             }
               
-            if (Vector3.Distance(transform.position, targetPoint) > distanceToLose)
+            if (Vector3.Distance(transform.position, _targetPoint) > distanceToLose)
             {
-                chasing = false;
-                chaseCounter = keepChasingTime;
+                _chasing = false;
+                _chaseCounter = keepChasingTime;
             }
 
             if (_shotGapCounter > 0)
@@ -132,7 +139,7 @@ public class EnemyController : MonoBehaviour
                         
                         }
 
-                        Agent.destination = transform.position;
+                        agent.destination = transform.position;
                     } else
                     {
                         _shotGapCounter = shotGap;
