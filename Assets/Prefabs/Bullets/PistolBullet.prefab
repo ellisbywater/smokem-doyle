@@ -117,7 +117,7 @@ MonoBehaviour:
   enemyBullet: 0
   playerBullet: 1
   rigidBody: {fileID: 4519091518900744348}
-  impactEffect: {fileID: 7207720470539156666, guid: d678376ba591936479d7712250a677a2, type: 3}
+  impactEffect: {fileID: 7207720470539156666, guid: 5c4f9721d20b16149b32c349661bc850, type: 3}
 --- !u!54 &4519091518900744348
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
     public LayerMask whatIsGround;
 
     public List<Gun> allGuns = new List<Gun>();
+    public List<Gun> unlockableGuns = new List<Gun>();
     public int currentGun;
     public Gun activeGun;
     public GameObject bullet;
@@ -200,5 +201,31 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Active Gun: " + activeGun);
 
         bulletOrigin.position = activeGun.bulletOrigin.position;
+    }
+
+    public void AddGun(string gunName)
+    {
+        bool gunUnlocked = false;
+
+        if (unlockableGuns.Count > 0)
+        {
+            for (int i = 0; i < unlockableGuns.Count; i++)
+            {
+                if (unlockableGuns[i].gunName == gunName)
+                {
+                    gunUnlocked = true;
+                    allGuns.Add(unlockableGuns[i]);
+                    unlockableGuns.RemoveAt(i);
+
+                    i = unlockableGuns.Count;
+                }
+            }
+
+            if (gunUnlocked)
+            {
+                currentGun = allGuns.Count - 2;
+                SwitchGun();
+            }
+        }
     }
 }
