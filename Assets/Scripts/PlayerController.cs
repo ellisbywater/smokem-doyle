@@ -124,6 +124,8 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y + mouseInput.x,transform.rotation.eulerAngles.z );
         cameraTransform.rotation = Quaternion.Euler(cameraTransform.rotation.eulerAngles + new Vector3(-mouseInput.y, 0f, 0f));
         
+        activeGun.muzzleFlash.SetActive(false);
+        
         // Handles Shooting
         //Single shot
         if (Input.GetMouseButtonDown(0) && activeGun.fireCounter <= 0)
@@ -181,7 +183,9 @@ public class PlayerController : MonoBehaviour
         {
             activeGun.currentAmmo--;
             Instantiate(activeGun.bullet, bulletOrigin.position, bulletOrigin.rotation);
+            
             activeGun.fireCounter = activeGun.fireRate;
+            activeGun.muzzleFlash.SetActive(true);
         }
     }
 

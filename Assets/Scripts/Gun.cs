@@ -15,6 +15,7 @@ public class Gun : MonoBehaviour
     public string gunName;
 
     public Color lowAmmoColor = new Color(236f, 99f, 109f, 255f);
+    public GameObject muzzleFlash;
     
     [HideInInspector]
     public float fireCounter;
